@@ -1,12 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import LandingPage from './Landing-Page/LandingPage'
-import Header from './Header/Header'
+import App from './app'
+import { BrowserRouter, Route, Routes } from 'react-router'
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Header/>
-    <LandingPage />
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<App/>} />
+    </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )
