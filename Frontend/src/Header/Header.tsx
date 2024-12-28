@@ -1,3 +1,4 @@
+import { NavLink } from "react-router";
 function Header() {
   return (
     <>
@@ -6,9 +7,10 @@ function Header() {
         <h1 className="text-base lg:text-2xl md:text-xl sm:text-lg text-white font-mono">Anti-Doomscroll</h1>
       </div>
         <nav className="flex items-center space-x-4 px-2">
-            <a href="#" className="text-base lg:text-lg md:text-sm sm:text-xs text-white">Pomodoro</a>
-            <a href="#" className="text-base lg:text-lg md:text-sm sm:text-xs text-white">Login</a>
-            <a href="#" className="text-base lg:text-lg md:text-sm sm:text-xs text-white">Sign Up</a>
+          <NavLink className="Regular-text" to='/'>About</NavLink>
+          <NavLink className="Regular-text" to='/Pomodoro'>Pomodoro</NavLink>
+          <a href="#" className="Regular-text">Login</a>
+          <a href="#" className="Regular-text">Sign Up</a>
         </nav>
     </header>
     </>
