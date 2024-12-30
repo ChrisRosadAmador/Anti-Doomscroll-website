@@ -1,10 +1,9 @@
 function PomodoroPage() {
-    return( 
+  return (
     <>
-    <div className="bg-neutral-700 text-center h-screen w-full">
-        <h1 className="text-white text-xl">Pomodoro Page</h1>
-    </div>
-    </>);
+      <h1 className="title-style">Pomodoro Page</h1>
+    </>
+  );
 }
 
 export default PomodoroPage;
