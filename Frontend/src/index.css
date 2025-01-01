@@ -22,7 +22,8 @@ on any text that is not a title for consistency.
 @media (min-width: 1024px) {
   /* for large screens (computers)*/
   .Regular-text {
-    @apply text-lg;
+    line-height: 2.5rem;
+    font-size: 1.125rem;
   }
 }
 /*
@@ -38,7 +39,7 @@ END OF REGULAR-TEXT
 */
 .page-segment-height {
   height: 2.5em;
-  min-height: 32px;
+  min-height: 40px;
   max-height: 48px;
   @apply fixed;
 }

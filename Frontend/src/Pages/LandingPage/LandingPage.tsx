@@ -1,5 +1,5 @@
-import PomodoroImg from "../assets/PomodoroTimer.jpg";
-import BlacklistImg from "../assets/blacklist-icon.jpeg";
+import PomodoroImg from "../../assets/PomodoroTimer.jpg";
+import BlacklistImg from "../../assets/blacklist-icon.jpeg";
 
 function LandingPage() {
   return (
