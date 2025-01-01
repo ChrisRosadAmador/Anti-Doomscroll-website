@@ -1,3 +1,88 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+==========================================================================
+Regular-text: custom tailwind-css properties for different sized media. Use
+on any text that is not a title for consistency.
+==========================================================================
+*/
+.Regular-text {
+  @apply text-white;
+  @apply text-xs;
+  @apply font-mono;
+}
+@media (min-width: 768px) {
+  /* for medium screens (tablets)*/
+  .Regular-text {
+    @apply text-sm;
+  }
+}
+@media (min-width: 1024px) {
+  /* for large screens (computers)*/
+  .Regular-text {
+    line-height: 2.5rem;
+    font-size: 1.125rem;
+  }
+}
+/*
+=========================
+END OF REGULAR-TEXT
+=========================
+*/
+
+/*
+=========================
+.page-segment-height
+=========================
+*/
+.page-segment-height {
+  height: 2.5em;
+  min-height: 40px;
+  max-height: 48px;
+  @apply fixed;
+}
+/*
+=========================
+END OF page-segment-height
+=========================
+*/
+/*
+=========================
+.title-style text-white text-center text-4xl font-bold py-10 font-mono
+=========================
+*/
+.title-style {
+  @apply text-white;
+  @apply text-center;
+  @apply text-4xl;
+  @apply font-bold;
+  @apply py-12;
+  @apply font-mono;
+}
+
+/*
+=========================
+END OF title-style
+=========================
+*/
+
+/*
+=========================
+Landing-Page-grid
+=========================
+*/
+.Landing-Page-grid {
+  @apply text-center;
+  @apply w-1/2;
+  @apply grid;
+  @apply items-center;
+  @apply justify-center;
+  @apply py-4;
+}
+/*
+=========================
+END OF Landing-Page-grid
+=========================
+*/
