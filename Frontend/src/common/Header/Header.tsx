@@ -10,7 +10,7 @@ function Header() {
         </div>
         <nav className="flex items-center space-x-4 px-4">
           <NavLink className="Regular-text" to="/">
-            About
+            info
           </NavLink>
           <NavLink className="Regular-text" to="/Pomodoro">
             Pomodoro
