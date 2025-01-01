@@ -66,3 +66,22 @@ END OF page-segment-height
 END OF title-style
 =========================
 */
+
+/*
+=========================
+Landing-Page-grid
+=========================
+*/
+.Landing-Page-grid {
+  @apply text-center;
+  @apply w-1/2;
+  @apply grid;
+  @apply items-center;
+  @apply justify-center;
+  @apply py-4;
+}
+/*
+=========================
+END OF Landing-Page-grid
+=========================
+*/
