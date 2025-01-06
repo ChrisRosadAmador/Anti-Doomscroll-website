@@ -23,7 +23,7 @@ function Footer() {
         <NavLink className="Regular-text text-center pl-36" to="/AboutUs">
           about us
         </NavLink>
-        <p className="Regular-text pr-2">@ 2025 RosadMarti</p>
+        <p className="Regular-text pr-2">@2025 RosadMarti</p>
       </footer>
     </>
   );

@@ -39,8 +39,8 @@ END OF REGULAR-TEXT
 */
 .page-segment-height {
   height: 2.5em;
-  min-height: 40px;
-  max-height: 48px;
+  min-height: 52px;
+  max-height: 64x;
   @apply fixed;
 }
 /*
@@ -56,7 +56,7 @@ END OF page-segment-height
 .title-style {
   @apply text-white;
   @apply text-center;
-  @apply text-4xl;
+  @apply text-8xl;
   @apply font-bold;
   @apply py-12;
   @apply font-mono;
