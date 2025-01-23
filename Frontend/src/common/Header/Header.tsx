@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 function Header() {
   return (
     <>
-      <header className="flex flex-nowrap flex-row w-full page-segment-height justify-between top-0 bg-neutral-800">
+      <header className="flex flex-nowrap flex-row w-full page-segment-height justify-between top-0 bg-neutral-800 shadow-md shadow-slate-950">
         <div className="flex items-center px-2">
           <h1 className="text-base lg:text-xl md:text-xl sm:text-lg text-white font-mono">
             Anti-Doomscroll

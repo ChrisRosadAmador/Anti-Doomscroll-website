@@ -1,18 +1,79 @@
+import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 function PomodoroPage() {
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const intervalIdRef = useRef(0);
+
+  /**
+   * useEffect react hooks that update minute and hour timers to meet
+   */
+  useEffect(() => {
+    if (seconds % 60 == 0 && seconds > 0) {
+      setMinutes((minute) => minute + 1);
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    if (minutes % 60 == 0 && minutes > 0) {
+      setHours((hour) => hour + 1);
+    }
+    if (hours == 24) {
+      ResetClick();
+    }
+  }, [minutes]);
+
+  /**
+   * button function that starts Pomodoro timer.
+   */
   const StartClick = () => {
     console.log("Start button clicked!");
+    if (!timerActive) {
+      const timerIntervalID = setInterval(() => {
+        setSeconds((second) => second + 1);
+      }, 1000);
+      setTimerActive(true);
+      intervalIdRef.current = timerIntervalID;
+    }
   };
-  const EndClick = () => {
+
+  /**
+   * button function that stops Pomodoro timer.
+   */
+  const PauseClick = () => {
+    if (timerActive) {
+      const intervalID = intervalIdRef.current;
+      clearInterval(intervalID);
+      setTimerActive(false);
+    }
     console.log("End button clicked!");
   };
+
+  /**
+   * button function that resets Pomodoro timer.
+   */
   const ResetClick = () => {
+    PauseClick();
+    setSeconds(0);
+    setMinutes(0);
+    setHours(0);
     console.log("Reset button clicked!");
+  };
+  /**
+   *
+   * @param currentTime value from 0 to 60
+   * @returns either a singular string value from 10-60 or a string from 0-9 with an extra 0 in the front
+   */
+  const setTime = (currentTime: number) => {
+    console.log(currentTime);
+    return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
   };
 
   return (
     <>
-      <h1 className="title-style mb-28">Pomodoro Timer</h1>
+      <h1 className="title-style mb-28 mt-28">Pomodoro Timer</h1>
       <div
         id="timer-section"
         className="flex justify-center items-center flex-col gap-10"
@@ -22,7 +83,11 @@ function PomodoroPage() {
             className="text-white font-mono text-8xl font-bold border-4 p-5 rounded-md border-white"
             id="timer-display"
           >
-            00:00:00
+            {setTime(hours % 60) +
+              ":" +
+              setTime(minutes % 60) +
+              ":" +
+              setTime(seconds % 60)}
           </p>
         </div>
         <div id="button-section" className="flex gap-4 justify-center pb-12">
@@ -34,9 +99,9 @@ function PomodoroPage() {
           />
           <Button
             color="bg-red-600"
-            text="End"
+            text="Pause"
             textColor="text-white"
-            ClickFunc={EndClick}
+            ClickFunc={PauseClick}
           />
           <Button
             color="bg-white"

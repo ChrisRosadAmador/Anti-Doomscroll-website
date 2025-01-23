@@ -5,7 +5,7 @@ import { NavLink } from "react-router";
 function Footer() {
   return (
     <>
-      <footer className="flex flex-nowrap flex-row h-16 w-full justify-between page-segment-height bottom-0 bg-neutral-800">
+      <footer className="flex flex-nowrap flex-row h-16 w-full justify-between page-segment-height items-center bottom-0 bg-neutral-800">
         <nav className="flex items-center space-x-4 px-2 gap-1">
           <a
             target="_blank"
@@ -20,7 +20,7 @@ function Footer() {
             <img className="h-4 w-4" src={LinkedIn} alt="LinkedIn-Logo" />
           </a>
         </nav>
-        <NavLink className="Regular-text text-center pl-36" to="/AboutUs">
+        <NavLink className="Regular-text text-center" to="/AboutUs">
           about us
         </NavLink>
         <p className="Regular-text pr-2">@2025 RosadMarti</p>
