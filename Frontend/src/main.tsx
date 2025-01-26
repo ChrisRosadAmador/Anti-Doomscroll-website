@@ -11,14 +11,18 @@ import AboutPage from "./Pages/AboutPage/AboutPage";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/Pomodoro" element={<PomodoroPage />} />
-        <Route path="*" element={<ErrorPage />} />
-        <Route path="/AboutUs" element={<AboutPage />} />
-      </Routes>
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex-grow pb-14">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/Pomodoro" element={<PomodoroPage />} />
+            <Route path="*" element={<ErrorPage />} />
+            <Route path="/AboutUs" element={<AboutPage />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </BrowserRouter>
   </StrictMode>
 );

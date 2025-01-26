@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
+import { IoSettingsOutline } from "react-icons/io5";
+import SettingsModal from "../../common/Modals/SettingsModal";
+import OverLays from "../../common/Modals/OverLays";
+
 function PomodoroPage() {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const intervalIdRef = useRef(0);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   /**
    * useEffect react hooks that update minute and hour timers to meet
@@ -67,13 +72,12 @@ function PomodoroPage() {
    * @returns either a singular string value from 10-60 or a string from 0-9 with an extra 0 in the front
    */
   const setTime = (currentTime: number) => {
-    console.log(currentTime);
     return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
   };
 
   return (
     <>
-      <h1 className="title-style mb-28 mt-28">Pomodoro Timer</h1>
+      <h1 className="title-style mb-16 mt-28">Pomodoro Timer</h1>
       <div
         id="timer-section"
         className="flex justify-center items-center flex-col gap-10"
@@ -90,7 +94,7 @@ function PomodoroPage() {
               setTime(seconds % 60)}
           </p>
         </div>
-        <div id="button-section" className="flex gap-4 justify-center pb-12">
+        <div id="button-section" className="flex gap-4 justify-center">
           <Button
             color="bg-blue-600"
             text="Start"
@@ -111,6 +115,15 @@ function PomodoroPage() {
           />
         </div>
       </div>
+      <button
+        className="text-white text-5xl setting-postion"
+        onClick={() => {
+          setSettingsOpen((setting) => !setting);
+        }}
+      >
+        <IoSettingsOutline />
+      </button>
+      <OverLays isOpen={settingsOpen} Modal={<SettingsModal />} />
     </>
   );
 }

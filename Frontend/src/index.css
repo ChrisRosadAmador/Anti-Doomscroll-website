@@ -86,3 +86,33 @@ Landing-Page-grid
 END OF Landing-Page-grid
 =========================
 */
+/*
+=========================
+Settings-postion
+=========================
+*/
+.setting-postion {
+  position: absolute;
+  bottom: 10%;
+  left: 95%;
+}
+/*
+=========================
+END OF Settings-postion
+=========================
+*/
+/*
+=========================
+setting-modal-postion
+=========================
+*/
+.setting-modal-postion {
+  position: fixed;
+  top: 33.3%;
+  left: 45vw;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  @apply h-80 w-64 bg-white border-4 border-gray-700 rounded-2xl;
+}
