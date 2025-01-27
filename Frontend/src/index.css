@@ -108,11 +108,18 @@ setting-modal-postion
 */
 .setting-modal-postion {
   position: fixed;
-  top: 33.3%;
-  left: 45vw;
-  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   align-items: center;
   display: flex;
   flex-direction: column;
-  @apply h-80 w-64 bg-white border-4 border-gray-700 rounded-2xl;
+  min-width: 400px;
+  max-width: fit-content;
+  @apply h-80 bg-white rounded-2xl;
 }
+/*
+=========================
+END OF setting-modal-postion
+=========================
+*/
