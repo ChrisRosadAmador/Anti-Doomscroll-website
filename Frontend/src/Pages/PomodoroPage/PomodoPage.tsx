@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 import { IoSettingsOutline } from "react-icons/io5";
 import SettingsModal from "../../common/Modals/SettingsModal";
-import OverLays from "../../common/Modals/OverLays";
 
 function PomodoroPage() {
   const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+  const [minutes, setMinutes] = useState(25);
   const [hours, setHours] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const intervalIdRef = useRef(0);
@@ -118,12 +117,18 @@ function PomodoroPage() {
       <button
         className="text-white text-5xl setting-postion"
         onClick={() => {
-          setSettingsOpen((setting) => !setting);
+          setSettingsOpen(true);
         }}
       >
         <IoSettingsOutline />
       </button>
-      <OverLays isOpen={settingsOpen} Modal={<SettingsModal />} />
+
+      <SettingsModal
+        isOpen={settingsOpen}
+        closeModal={() => {
+          setSettingsOpen(false);
+        }}
+      />
     </>
   );
 }

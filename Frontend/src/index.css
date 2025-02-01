@@ -115,11 +115,40 @@ setting-modal-postion
   display: flex;
   flex-direction: column;
   min-width: 400px;
+  width: 600px;
   max-width: fit-content;
-  @apply h-80 bg-white rounded-2xl;
+  @apply h-96 bg-white rounded-2xl;
+  overflow: auto;
 }
 /*
 =========================
 END OF setting-modal-postion
+=========================
+*/
+/*
+=========================
+setting-modal-footer
+=========================
+*/
+.setting-modal-footer {
+  background-color: #d9d9d9;
+}
+/*
+=========================
+END OF setting-modal-footer
+=========================
+*/
+/*
+=========================
+setting-modal-border
+=========================
+*/
+.setting-modal-border {
+  border-bottom-width: 0.5px;
+  border-color: #d9d9d9;
+}
+/*
+=========================
+END OF setting-modal-border
 =========================
 */
