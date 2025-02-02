@@ -4,40 +4,85 @@ import { IoSettingsOutline } from "react-icons/io5";
 import SettingsModal from "../../common/Modals/SettingsModal";
 
 function PomodoroPage() {
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(25);
-  const [hours, setHours] = useState(0);
+  const [timer, setTimer] = useState({ seconds: 0, minutes: 0, hours: 0 });
   const [timerActive, setTimerActive] = useState(false);
   const intervalIdRef = useRef(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsRef = useRef<settingInput>(null);
+  const [pause, setPause] = useState(false);
+  enum alarmSound {
+    placeHolder = "",
+    alarm1 = "sound1",
+    alarm2 = "sound2",
+    alarm3 = "sound3",
+  }
 
+  enum backgroundMusic {
+    placeHolder = "",
+    bgMusic1 = "Music1",
+    bgMusic2 = "Music2",
+    bgMusic3 = "Music3",
+  }
+  interface settingInput {
+    pomodoro: number;
+    shortBreak: number;
+    longBreak: number;
+    alarm: alarmSound;
+    bgMusic: backgroundMusic;
+    notification: boolean;
+  }
   /**
    * useEffect react hooks that update minute and hour timers to meet
    */
   useEffect(() => {
-    if (seconds % 60 == 0 && seconds > 0) {
-      setMinutes((minute) => minute + 1);
+    if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 0) {
+      clearInterval(intervalIdRef.current);
+      setTimerActive(false);
+      return;
     }
-  }, [seconds]);
+    if (timer.seconds == 0 && timer.minutes > 0 && timerActive) {
+      setTimer((prevTimer) => ({
+        hours: prevTimer.hours,
+        minutes: prevTimer.minutes - 1,
+        seconds: 59,
+      }));
+    }
+
+    if (timer.seconds == 0 && timer.minutes == 0 && timerActive) {
+      setTimer((prevTimer) => ({
+        hours: prevTimer.hours - 1,
+        minutes: 59,
+        seconds: 59,
+      }));
+    }
+  }, [timer.seconds, timer.minutes]);
 
   useEffect(() => {
-    if (minutes % 60 == 0 && minutes > 0) {
-      setHours((hour) => hour + 1);
+    if (settingsRef.current && !timerActive) {
+      setTimer({ hours: settingsRef.current.pomodoro, minutes: 0, seconds: 0 });
     }
-    if (hours == 24) {
-      ResetClick();
-    }
-  }, [minutes]);
-
+  }, [settingsRef.current]);
   /**
    * button function that starts Pomodoro timer.
    */
   const StartClick = () => {
-    console.log("Start button clicked!");
-    if (!timerActive) {
+    if (!timerActive && settingsRef.current && timer.hours > 0) {
+      console.log("Start button clicked!");
+      if (!pause) {
+        setTimer((prevTimer) => ({
+          hours: prevTimer.hours - 1,
+          minutes: 59,
+          seconds: 59,
+        }));
+        setPause(true);
+      }
       const timerIntervalID = setInterval(() => {
-        setSeconds((second) => second + 1);
+        setTimer((prevTimer) => ({
+          ...prevTimer,
+          seconds: prevTimer.seconds - 1,
+        }));
       }, 1000);
+
       setTimerActive(true);
       intervalIdRef.current = timerIntervalID;
     }
@@ -51,19 +96,20 @@ function PomodoroPage() {
       const intervalID = intervalIdRef.current;
       clearInterval(intervalID);
       setTimerActive(false);
+      console.log("End button clicked!");
     }
-    console.log("End button clicked!");
   };
 
   /**
    * button function that resets Pomodoro timer.
    */
   const ResetClick = () => {
-    PauseClick();
-    setSeconds(0);
-    setMinutes(0);
-    setHours(0);
-    console.log("Reset button clicked!");
+    if (settingsRef.current) {
+      setPause(false);
+      PauseClick();
+      setTimer({ hours: settingsRef.current.pomodoro, minutes: 0, seconds: 0 });
+      console.log("Reset button clicked!");
+    }
   };
   /**
    *
@@ -86,11 +132,11 @@ function PomodoroPage() {
             className="text-white font-mono text-8xl font-bold border-4 p-5 rounded-md border-white"
             id="timer-display"
           >
-            {setTime(hours % 60) +
+            {setTime(timer.hours % 60) +
               ":" +
-              setTime(minutes % 60) +
+              setTime(timer.minutes % 60) +
               ":" +
-              setTime(seconds % 60)}
+              setTime(timer.seconds % 60)}
           </p>
         </div>
         <div id="button-section" className="flex gap-4 justify-center">
@@ -126,8 +172,10 @@ function PomodoroPage() {
       <SettingsModal
         isOpen={settingsOpen}
         closeModal={() => {
+          console.log("closeButton clicked.");
           setSettingsOpen(false);
         }}
+        settingsObj={settingsRef}
       />
     </>
   );
