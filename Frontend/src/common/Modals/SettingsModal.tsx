@@ -78,7 +78,6 @@ function SettingsModal(props: any) {
                 placeholder="Pomodoro (hours)"
                 type="number"
                 min={1}
-                defaultValue={2}
                 max={24}
                 {...register("pomodoro", { min: 1, max: 24 })}
               />
@@ -86,7 +85,6 @@ function SettingsModal(props: any) {
                 className="w-1/3 h-8 font-mono text-xs bg-zinc-300  rounded-md"
                 placeholder="Short Break (minutes)"
                 type="number"
-                defaultValue={10}
                 min={1}
                 max={20}
                 {...register("shortBreak", { min: 1, max: 60 })}
@@ -95,7 +93,6 @@ function SettingsModal(props: any) {
                 className="w-1/3 h-8 font-mono text-xs bg-zinc-300  rounded-md"
                 placeholder="Long Break (minutes)"
                 type="number"
-                defaultValue={30}
                 {...register("longBreak", { min: 1, max: 60 })}
               />
             </div>
