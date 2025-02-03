@@ -6,10 +6,13 @@ import SettingsModal from "../../common/Modals/SettingsModal";
 function PomodoroPage() {
   const [timer, setTimer] = useState({ seconds: 0, minutes: 0, hours: 0 });
   const [timerActive, setTimerActive] = useState(false);
-  const intervalIdRef = useRef(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef<settingInput>(null);
   const [pause, setPause] = useState(false);
+  const intervalIdRef = useRef(0);
+
+  const body: HTMLElement | null = document.getElementById("body");
+
   enum alarmSound {
     placeHolder = "",
     alarm1 = "sound1",
@@ -163,6 +166,7 @@ function PomodoroPage() {
       <button
         className="text-white text-5xl setting-postion"
         onClick={() => {
+          if (body) body.style.overflow = "hidden";
           setSettingsOpen(true);
         }}
       >
@@ -172,7 +176,7 @@ function PomodoroPage() {
       <SettingsModal
         isOpen={settingsOpen}
         closeModal={() => {
-          console.log("closeButton clicked.");
+          if (body) body.style.overflow = "hidden auto";
           setSettingsOpen(false);
         }}
         settingsObj={settingsRef}
