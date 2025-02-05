@@ -32,7 +32,7 @@ function SettingsModal(props: any) {
   }
 
   const [notification, setNotification] = useState(false);
-  const { register, handleSubmit, formState } = useForm<settingInput>({
+  const { register, handleSubmit, formState, trigger } = useForm<settingInput>({
     mode: "all",
   });
   return createPortal(
@@ -112,7 +112,7 @@ function SettingsModal(props: any) {
                     className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.shortBreak ? "border-red-500" : ""}`}
                     placeholder="Short Break (minutes)"
                     type="number"
-                    min={1}
+                    min={5}
                     max={30}
                     {...register("shortBreak", {
                       valueAsNumber: true,
@@ -216,11 +216,14 @@ function SettingsModal(props: any) {
               type="submit"
               form="setting-form"
               className="mr-5 bg-blue-500 rounded-md font-bold font-mono w-28 text-white"
-              onClick={() => {
-                if (formState.isValid) {
-                  setTimeout(closeModal, 50);
+              onClick={async () => {
+                const isValid = await trigger();
+                if (isValid) {
+                  setTimeout(() => {
+                    closeModal();
+                  }, 50);
                 } else {
-                  console.log(formState.errors);
+                  console.error("Warning errors found: ", formState.errors);
                 }
               }}
             >

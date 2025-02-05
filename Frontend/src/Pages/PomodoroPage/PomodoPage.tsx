@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 import { IoSettingsOutline } from "react-icons/io5";
 import SettingsModal from "../../common/Modals/SettingsModal";
-
+import TimerCompleteModal from "../../common/Modals/TimerCompleteModal";
 function PomodoroPage() {
   const [timer, setTimer] = useState({ seconds: 0, minutes: 0, hours: 0 });
   const [timerActive, setTimerActive] = useState(false);
@@ -10,7 +10,7 @@ function PomodoroPage() {
   const settingsRef = useRef<settingInput>(null);
   const [pause, setPause] = useState(false);
   const intervalIdRef = useRef(0);
-
+  const [timerComplete, setTimerComplete] = useState(false);
   const body: HTMLElement | null = document.getElementById("body");
 
   enum alarmSound {
@@ -40,6 +40,15 @@ function PomodoroPage() {
   useEffect(() => {
     if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 0) {
       clearInterval(intervalIdRef.current);
+      if (settingsRef.current) {
+        let Hours = settingsRef.current.pomodoro;
+        setTimer((prevTimer) => ({
+          ...prevTimer,
+          hours: Hours,
+        }));
+      }
+      if (timerActive) setTimerComplete(true);
+      setPause(false);
       setTimerActive(false);
       return;
     }
@@ -69,8 +78,13 @@ function PomodoroPage() {
    * button function that starts Pomodoro timer.
    */
   const StartClick = () => {
-    if (!timerActive && settingsRef.current && timer.hours > 0) {
+    if (
+      !timerActive &&
+      settingsRef.current &&
+      (timer.hours > 0 || timer.minutes > 0 || timer.seconds > 0)
+    ) {
       console.log("Start button clicked!");
+      console.log(timer, pause);
       if (!pause) {
         setTimer((prevTimer) => ({
           hours: prevTimer.hours - 1,
@@ -84,7 +98,7 @@ function PomodoroPage() {
           ...prevTimer,
           seconds: prevTimer.seconds - 1,
         }));
-      }, 1000);
+      }, 1);
 
       setTimerActive(true);
       intervalIdRef.current = timerIntervalID;
@@ -172,6 +186,12 @@ function PomodoroPage() {
       >
         <IoSettingsOutline />
       </button>
+      <TimerCompleteModal
+        canOpen={timerComplete}
+        onClose={() => {
+          setTimerComplete(false);
+        }}
+      />
 
       <SettingsModal
         isOpen={settingsOpen}
@@ -186,16 +206,3 @@ function PomodoroPage() {
 }
 
 export default PomodoroPage;
-
-/*
-Notes on how to create timer:
-- create start, pause, & reset timer.
-- display timer
-- refresh timer each 1000 miliseconds.
-    - if seconds hit zero then decrement minute timer
-    - if minute timer is zero && second timer is zero then decrement hour timer and add 59 minutes & 59 seconds to timer. 
-      
-- if pause is hit stop interval but save current time
-- reset button: when page is loaded / time is inputed, save that value.
-
-*/
