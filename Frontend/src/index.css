@@ -178,3 +178,38 @@ settings-alert
   top: 0px;
   @apply font-mono text-red-500 text-xs w-full h-0 relative;
 }
+/*
+=========================
+END OF settings-alert
+=========================
+*/
+/*
+=========================
+celebration-header
+=========================
+*/
+.celebration-modal {
+  min-width: 350px;
+  min-height: 150px;
+  width: 33%;
+  height: fit-content;
+  max-width: 650px;
+  max-height: 300px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  @apply rounded-lg;
+}
+
+.celebration-modal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: baseline;
+  justify-items: baseline;
+  padding-top: 5px;
+  border-bottom-width: 0.5px;
+  border-color: #d9d9d9;
+}

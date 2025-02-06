@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 import { IoSettingsOutline } from "react-icons/io5";
 import SettingsModal from "../../common/Modals/SettingsModal";
-import TimerCompleteModal from "../../common/Modals/TimerCompleteModal";
+import CelebrationModal from "../../common/Modals/CelebrationModal";
 function PomodoroPage() {
   const [timer, setTimer] = useState({ seconds: 0, minutes: 0, hours: 0 });
   const [timerActive, setTimerActive] = useState(false);
@@ -98,7 +98,7 @@ function PomodoroPage() {
           ...prevTimer,
           seconds: prevTimer.seconds - 1,
         }));
-      }, 1);
+      }, 1000);
 
       setTimerActive(true);
       intervalIdRef.current = timerIntervalID;
@@ -186,7 +186,16 @@ function PomodoroPage() {
       >
         <IoSettingsOutline />
       </button>
-      <TimerCompleteModal
+      <button
+        onClick={() => {
+          if (body) body.style.overflow = "hidden";
+          setTimerComplete(true);
+        }}
+        className="text-sm font-mono bg-white self-center justify-self-center text-black mb-20 mr-20"
+      >
+        Dev Button: open celebrate modal
+      </button>
+      <CelebrationModal
         canOpen={timerComplete}
         onClose={() => {
           setTimerComplete(false);
