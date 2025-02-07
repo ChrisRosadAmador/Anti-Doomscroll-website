@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 import { IoSettingsOutline } from "react-icons/io5";
+import { AnimatePresence, motion } from "framer-motion";
 import SettingsModal from "../../common/Modals/SettingsModal";
 import CelebrationModal from "../../common/Modals/CelebrationModal";
 function PomodoroPage() {
@@ -47,7 +48,10 @@ function PomodoroPage() {
           hours: Hours,
         }));
       }
-      if (timerActive) setTimerComplete(true);
+      if (timerActive) {
+        if (body) body.style.overflow = "hidden";
+        setTimerComplete(true);
+      }
       setPause(false);
       setTimerActive(false);
       return;
@@ -186,22 +190,13 @@ function PomodoroPage() {
       >
         <IoSettingsOutline />
       </button>
-      <button
-        onClick={() => {
-          if (body) body.style.overflow = "hidden";
-          setTimerComplete(true);
-        }}
-        className="text-sm font-mono bg-white self-center justify-self-center text-black mb-20 mr-20"
-      >
-        Dev Button: open celebrate modal
-      </button>
+
       <CelebrationModal
         canOpen={timerComplete}
         onClose={() => {
           setTimerComplete(false);
         }}
       />
-
       <SettingsModal
         isOpen={settingsOpen}
         closeModal={() => {
