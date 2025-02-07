@@ -27,7 +27,7 @@ function CelebrationModal(props: any) {
               className="celebration-modal"
               initial={{ ...stateModal, y: 100 }}
               animate={{ ...animateModal, y: 0 }}
-              exit={{ ...stateModal, y: 100 }}
+              exit={{ ...stateModal, y: -100 }}
               transition={transition}
             >
               <div className="celebration-modal-header">

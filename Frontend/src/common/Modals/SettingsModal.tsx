@@ -53,7 +53,7 @@ function SettingsModal(props: any) {
             <motion.div
               initial={{ ...stateModal, y: 100 }}
               animate={{ ...animateModal, y: 0 }}
-              exit={{ ...stateModal, y: 100 }}
+              exit={{ ...stateModal, y: -100 }}
               transition={transition}
               className="setting-modal-postion"
             >
