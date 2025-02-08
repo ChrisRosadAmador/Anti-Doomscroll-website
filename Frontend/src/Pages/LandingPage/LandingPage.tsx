@@ -1,11 +1,28 @@
 import PomodoroImg from "../../assets/PomodoroTimer.jpg";
 import BlacklistImg from "../../assets/blacklist-icon.jpeg";
-
+import { motion } from "framer-motion";
 function LandingPage() {
+  const visibleFrame = { opacity: 1 };
+  const invisibleFrame = { opacity: 0 };
   return (
     <>
-      <h1 className="title-style">What is Anti-Doomscroll?</h1>
-      <div className="grid gap-5 grid-cols-2 pb-10" id="infoDiv">
+      <motion.h1
+        initial={invisibleFrame}
+        animate={visibleFrame}
+        exit={invisibleFrame}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="title-style"
+      >
+        What is Anti-Doomscroll?
+      </motion.h1>
+      <motion.div
+        initial={invisibleFrame}
+        animate={visibleFrame}
+        exit={invisibleFrame}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="grid gap-5 grid-cols-2 pb-10"
+        id="infoDiv"
+      >
         <span className="justify-self-end Landing-Page-grid">
           <p className="Regular-text text-left">
             The Anti-Doomscroll website is a powerful tool to help students
@@ -29,7 +46,7 @@ function LandingPage() {
             it, you're free to procrastinate—good luck!
           </p>
         </span>
-      </div>
+      </motion.div>
     </>
   );
 }

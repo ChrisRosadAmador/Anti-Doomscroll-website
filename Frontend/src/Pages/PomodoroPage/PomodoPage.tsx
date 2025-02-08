@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "../../common/Button/Button";
 import { IoSettingsOutline } from "react-icons/io5";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import SettingsModal from "../../common/Modals/SettingsModal";
 import CelebrationModal from "../../common/Modals/CelebrationModal";
 function PomodoroPage() {
@@ -141,10 +141,25 @@ function PomodoroPage() {
     return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
   };
 
+  const visibleFrame = { opacity: 1 };
+  const invisibleFrame = { opacity: 0 };
+
   return (
     <>
-      <h1 className="title-style mb-16 mt-28">Pomodoro Timer</h1>
-      <div
+      <motion.h1
+        initial={invisibleFrame}
+        animate={visibleFrame}
+        exit={invisibleFrame}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="title-style mb-16 mt-28"
+      >
+        Pomodoro Timer
+      </motion.h1>
+      <motion.div
+        initial={invisibleFrame}
+        animate={visibleFrame}
+        exit={invisibleFrame}
+        transition={{ duration: 0.5, delay: 0.1 }}
         id="timer-section"
         className="flex justify-center items-center flex-col gap-10"
       >
@@ -180,16 +195,16 @@ function PomodoroPage() {
             ClickFunc={ResetClick}
           />
         </div>
-      </div>
-      <button
-        className="text-white text-5xl setting-postion"
-        onClick={() => {
-          if (body) body.style.overflow = "hidden";
-          setSettingsOpen(true);
-        }}
-      >
-        <IoSettingsOutline />
-      </button>
+        <button
+          className="text-white text-5xl setting-postion"
+          onClick={() => {
+            if (body) body.style.overflow = "hidden";
+            setSettingsOpen(true);
+          }}
+        >
+          <IoSettingsOutline />
+        </button>
+      </motion.div>
 
       <CelebrationModal
         canOpen={timerComplete}
