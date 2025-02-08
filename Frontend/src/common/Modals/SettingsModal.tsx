@@ -30,6 +30,7 @@ function SettingsModal(props: any) {
     pomodoro: number;
     shortBreak: number;
     longBreak: number;
+    breakCount: number;
     alarm: alarmSound;
     bgMusic: backgroundMusic;
     notification: boolean;
@@ -70,7 +71,7 @@ function SettingsModal(props: any) {
                 </button>
               </div>
               <div id="setting-input" className="flex-grow w-full flex gap-2">
-                <div className="flex flex-col justify-evenly gap-8 text-center w-28 text-neutral-800 font-mono">
+                <div className="flex flex-col justify-between gap-8 text-center w-28 text-neutral-800 font-mono">
                   <p className="pt-5">Time</p>
                   <p>Sound</p>
                   <p className="pb-5">Nofications</p>
@@ -85,15 +86,15 @@ function SettingsModal(props: any) {
                 />
                 <form
                   id="setting-form"
-                  className="flex flex-col justify-evenly w-full mr-5"
+                  className="flex flex-col gap-10 w-full mr-5"
                   onSubmit={handleSubmit((data) => {
                     settingsObj.current = data;
                     console.log(data);
                   })}
                 >
-                  {/* need to change this to a grid and format it in grid template columns otherwise we have a bunch of forms to submit back coding practice. */}
-                  <div className="flex h-12 gap-4 items-center mr-1">
-                    <label className="w-1/3">
+                  <div className="flex h-12 gap-4 mt-2 items-center mr-1">
+                    <label className="w-1/4 font-mono text-sm">
+                      Pomodoro Timer
                       <input
                         className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.pomodoro ? "border-red-500" : ""}`}
                         placeholder="Pomodoro (hours)"
@@ -125,7 +126,8 @@ function SettingsModal(props: any) {
                         </p>
                       )}
                     </label>
-                    <label className="w-1/3">
+                    <label className="w-1/4 font-mono text-sm">
+                      Short Break Time
                       <input
                         className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.shortBreak ? "border-red-500" : ""}`}
                         placeholder="Short Break (minutes)"
@@ -157,7 +159,8 @@ function SettingsModal(props: any) {
                         </p>
                       )}
                     </label>
-                    <label className="w-1/3">
+                    <label className="w-1/4 font-mono text-sm">
+                      Long Break Time
                       <input
                         className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.longBreak ? "border-red-500" : ""}`}
                         placeholder="Long Break (minutes)"
@@ -187,33 +190,76 @@ function SettingsModal(props: any) {
                         </p>
                       )}
                     </label>
+                    <label className="w-1/4 font-mono text-sm">
+                      break count
+                      <input
+                        className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.breakCount ? "border-red-500" : ""}`}
+                        placeholder="# of breaks"
+                        type="number"
+                        {...register("breakCount", {
+                          valueAsNumber: true,
+                          min: {
+                            value: 1,
+                            message:
+                              "Error: too few breaks, you must choose between 1-6 breaks.",
+                          },
+                          max: {
+                            value: 6,
+                            message:
+                              "Error: too many breaks, you must choose between 1-6 breaks.",
+                          },
+                          required: {
+                            value: true,
+                            message:
+                              "Input is required for Pomodoro timer to work.",
+                          },
+                        })}
+                      />
+                      {formState.errors.breakCount && (
+                        <p className="settings-alert">
+                          {formState.errors.breakCount.message}
+                        </p>
+                      )}{" "}
+                    </label>
                   </div>
                   <div className="flex h-0 gap-4 items-center mr-1"></div>
                   <div className="flex h-12 gap-4 items-center mr-1 justify-center">
-                    <select
-                      className="w-1/2 h-8 font-mono text-xs bg-zinc-300 rounded-md"
-                      {...register("alarm")}
-                    >
-                      <option value={alarmSound.placeHolder}>
-                        Please select an Alarm
-                      </option>
-                      <option value={alarmSound.alarm1}>sound1</option>
-                      <option value={alarmSound.alarm2}>sound2</option>
-                      <option value={alarmSound.alarm3}>sound3</option>
-                    </select>
-                    <select
-                      className="w-1/2 h-8 font-mono text-xs bg-zinc-300 rounded-md"
-                      {...register("bgMusic")}
-                    >
-                      <option value={backgroundMusic.placeHolder}>
-                        Please select background music
-                      </option>
-                      <option value={backgroundMusic.bgMusic1}>bgMusic1</option>
-                      <option value={backgroundMusic.bgMusic2}>bgMusic2</option>
-                      <option value={backgroundMusic.bgMusic3}>bgMusic3</option>
-                    </select>
+                    <label className="w-1/2 font-mono text-sm flex flex-col">
+                      alarm options
+                      <select
+                        className="h-8 font-mono text-xs bg-zinc-300 rounded-md"
+                        {...register("alarm")}
+                      >
+                        <option value={alarmSound.placeHolder}>
+                          Please select an Alarm
+                        </option>
+                        <option value={alarmSound.alarm1}>sound1</option>
+                        <option value={alarmSound.alarm2}>sound2</option>
+                        <option value={alarmSound.alarm3}>sound3</option>
+                      </select>
+                    </label>
+                    <label className="w-1/2 font-mono text-sm flex flex-col">
+                      alarm options
+                      <select
+                        className="h-8 font-mono text-xs bg-zinc-300 rounded-md"
+                        {...register("bgMusic")}
+                      >
+                        <option value={backgroundMusic.placeHolder}>
+                          Please select background music
+                        </option>
+                        <option value={backgroundMusic.bgMusic1}>
+                          bgMusic1
+                        </option>
+                        <option value={backgroundMusic.bgMusic2}>
+                          bgMusic2
+                        </option>
+                        <option value={backgroundMusic.bgMusic3}>
+                          bgMusic3
+                        </option>
+                      </select>
+                    </label>
                   </div>
-                  <div className="flex flex-rowh-12 gap-4 items-center mr-1">
+                  <div className="flex mt-8 gap-4 items-center mr-1">
                     <label className="inline-block hover:cursor-pointer">
                       <input
                         type="checkbox"

@@ -1,16 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import Button from "../../common/Button/Button";
+import { useRef, useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 import SettingsModal from "../../common/Modals/SettingsModal";
 import CelebrationModal from "../../common/Modals/CelebrationModal";
+import StudyTimer from "./TimerComponents/StudyTimer";
 function PomodoroPage() {
-  const [timer, setTimer] = useState({ seconds: 0, minutes: 0, hours: 0 });
-  const [timerActive, setTimerActive] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef<settingInput>(null);
-  const [pause, setPause] = useState(false);
-  const intervalIdRef = useRef(0);
   const [timerComplete, setTimerComplete] = useState(false);
   const body: HTMLElement | null = document.getElementById("body");
 
@@ -35,111 +31,6 @@ function PomodoroPage() {
     bgMusic: backgroundMusic;
     notification: boolean;
   }
-  /**
-   * useEffect react hooks that update minute and hour timers to meet
-   */
-  useEffect(() => {
-    if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 0) {
-      clearInterval(intervalIdRef.current);
-      if (settingsRef.current) {
-        let Hours = settingsRef.current.pomodoro;
-        setTimer((prevTimer) => ({
-          ...prevTimer,
-          hours: Hours,
-        }));
-      }
-      if (timerActive) {
-        if (body) body.style.overflow = "hidden";
-        setTimerComplete(true);
-      }
-      setPause(false);
-      setTimerActive(false);
-      return;
-    }
-    if (timer.seconds == 0 && timer.minutes > 0 && timerActive) {
-      setTimer((prevTimer) => ({
-        hours: prevTimer.hours,
-        minutes: prevTimer.minutes - 1,
-        seconds: 59,
-      }));
-    }
-
-    if (timer.seconds == 0 && timer.minutes == 0 && timerActive) {
-      setTimer((prevTimer) => ({
-        hours: prevTimer.hours - 1,
-        minutes: 59,
-        seconds: 59,
-      }));
-    }
-  }, [timer.seconds, timer.minutes]);
-
-  useEffect(() => {
-    if (settingsRef.current && !timerActive) {
-      setTimer({ hours: settingsRef.current.pomodoro, minutes: 0, seconds: 0 });
-    }
-  }, [settingsRef.current]);
-  /**
-   * button function that starts Pomodoro timer.
-   */
-  const StartClick = () => {
-    if (
-      !timerActive &&
-      settingsRef.current &&
-      (timer.hours > 0 || timer.minutes > 0 || timer.seconds > 0)
-    ) {
-      console.log("Start button clicked!");
-      console.log(timer, pause);
-      if (!pause) {
-        setTimer((prevTimer) => ({
-          hours: prevTimer.hours - 1,
-          minutes: 59,
-          seconds: 59,
-        }));
-        setPause(true);
-      }
-      const timerIntervalID = setInterval(() => {
-        setTimer((prevTimer) => ({
-          ...prevTimer,
-          seconds: prevTimer.seconds - 1,
-        }));
-      }, 1000);
-
-      setTimerActive(true);
-      intervalIdRef.current = timerIntervalID;
-    }
-  };
-
-  /**
-   * button function that stops Pomodoro timer.
-   */
-  const PauseClick = () => {
-    if (timerActive) {
-      const intervalID = intervalIdRef.current;
-      clearInterval(intervalID);
-      setTimerActive(false);
-      console.log("End button clicked!");
-    }
-  };
-
-  /**
-   * button function that resets Pomodoro timer.
-   */
-  const ResetClick = () => {
-    if (settingsRef.current) {
-      setPause(false);
-      PauseClick();
-      setTimer({ hours: settingsRef.current.pomodoro, minutes: 0, seconds: 0 });
-      console.log("Reset button clicked!");
-    }
-  };
-  /**
-   *
-   * @param currentTime value from 0 to 60
-   * @returns either a singular string value from 10-60 or a string from 0-9 with an extra 0 in the front
-   */
-  const setTime = (currentTime: number) => {
-    return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
-  };
 
   const visibleFrame = { opacity: 1 };
   const invisibleFrame = { opacity: 0 };
@@ -151,7 +42,7 @@ function PomodoroPage() {
         animate={visibleFrame}
         exit={invisibleFrame}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="title-style mb-16 mt-28"
+        className="title-style mb-16 mt-10"
       >
         Pomodoro Timer
       </motion.h1>
@@ -163,38 +54,13 @@ function PomodoroPage() {
         id="timer-section"
         className="flex justify-center items-center flex-col gap-10"
       >
-        <div id="timer-display-section" className="flex justify-center">
-          <p
-            className="text-white font-mono text-8xl font-bold border-4 p-5 rounded-md border-white"
-            id="timer-display"
-          >
-            {setTime(timer.hours % 60) +
-              ":" +
-              setTime(timer.minutes % 60) +
-              ":" +
-              setTime(timer.seconds % 60)}
-          </p>
-        </div>
-        <div id="button-section" className="flex gap-4 justify-center">
-          <Button
-            color="bg-blue-600"
-            text="Start"
-            textColor="text-white"
-            ClickFunc={StartClick}
-          />
-          <Button
-            color="bg-red-600"
-            text="Pause"
-            textColor="text-white"
-            ClickFunc={PauseClick}
-          />
-          <Button
-            color="bg-white"
-            text="Reset"
-            textColor="text-black"
-            ClickFunc={ResetClick}
-          />
-        </div>
+        <StudyTimer
+          settingReference={settingsRef}
+          timerState={(newState: boolean) => {
+            setTimerComplete(newState);
+          }}
+          bodyRef={body}
+        />
         <button
           className="text-white text-5xl setting-postion"
           onClick={() => {
