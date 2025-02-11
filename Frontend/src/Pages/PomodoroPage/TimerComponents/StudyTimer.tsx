@@ -7,48 +7,95 @@ function StudyTimer(props: any) {
   const [timerActive, setTimerActive] = useState(false);
   const [pause, setPause] = useState(false);
   const intervalIdRef = useRef(0);
-  const { settingReference, timerState, bodyRef } = props;
+  const [breaks, setBreaks] = useState<number[]>([]);
+  const { settingReference, timerState, bodyRef, breaksRef } = props;
+
+  /**
+   * @param hours The current hours remaining when function is called. A number that goes from 0-24.
+   * @param minutes The current minutes remaining when function is called. A number that goes from 0-59.
+   * @returns A numerical value representing the time inputted.
+   */
+  const convertTime = (hours: number, minutes: number) => {
+    return hours * 60 + minutes;
+  };
+
+  const stopTimer = () => {
+    clearInterval(intervalIdRef.current);
+    setTimerActive(false);
+  };
+
+  /**
+   * @param currentTime value from 0 to 60
+   * @returns either a singular string value from 10-60 or a string from 0-9 with an extra 0 in the front
+   */
+  const setTime = (currentTime: number) => {
+    return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
+  };
 
   /**
    * useEffect react hooks that update minute and hour timers to meet
    */
   useEffect(() => {
+    // case 1: if timer is complete then go through steps to reset timer.
     if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 0) {
-      clearInterval(intervalIdRef.current);
+      // case 1.1: checks if the settings input is still accesssible and if it is then the timer is reset to that time.
       if (settingReference.current) {
-        let Hours = settingReference.current.pomodoro;
         setTimer((prevTimer) => ({
           ...prevTimer,
-          hours: Hours,
+          hours: settingReference.current.pomodoro,
         }));
       }
+
+      // case 1.2: if timerActive state is set to true then the timer was active when the clock hit 0 so open "celebration" modal to mark end of pomodoro.
       if (timerActive) {
         if (bodyRef) bodyRef.style.overflow = "hidden";
         timerState(true);
       }
       setPause(false);
-      setTimerActive(false);
+      stopTimer();
       return;
     }
-    if (timer.seconds == 0 && timer.minutes > 0 && timerActive) {
-      setTimer((prevTimer) => ({
-        hours: prevTimer.hours,
-        minutes: prevTimer.minutes - 1,
-        seconds: 59,
-      }));
+
+    // case 2: if converted timer value is equal to the top most break then start break sequence
+    if (
+      breaks.length != 0 &&
+      convertTime(timer.hours, timer.minutes) == breaks[breaks.length - 1] &&
+      timer.seconds == 1
+    ) {
+      setBreaks((prevBreaks) => [
+        ...prevBreaks.slice(0, prevBreaks.length - 1),
+      ]);
+
+      stopTimer();
+      return;
     }
 
-    if (timer.seconds == 0 && timer.minutes == 0 && timerActive) {
-      setTimer((prevTimer) => ({
-        hours: prevTimer.hours - 1,
-        minutes: 59,
-        seconds: 59,
-      }));
+    // case 3: if timer is and seconds is equal to zero go through to find out which value to decrement.
+    if (timerActive && timer.seconds == 0) {
+      // case 3.1: if timer minutes is not zero yet then decrement from minute value and add 59 to seconds.
+      if (timer.minutes > 0) {
+        setTimer((prevTimer) => ({
+          hours: prevTimer.hours,
+          minutes: prevTimer.minutes - 1,
+          seconds: 59,
+        }));
+      } else {
+        // case 3.2: minutes hit zero so must decrement hours timer so replenish minutes and seconds values.
+        setTimer((prevTimer) => ({
+          hours: prevTimer.hours - 1,
+          minutes: 59,
+          seconds: 59,
+        }));
+      }
     }
   }, [timer.seconds, timer.minutes]);
 
+  /**
+   * useEffect sets a new value for the timer when the timer is not active
+   */
   useEffect(() => {
     if (settingReference.current && !timerActive) {
+      setPause(false);
       setTimer({
         hours: settingReference.current.pomodoro,
         minutes: 0,
@@ -56,6 +103,7 @@ function StudyTimer(props: any) {
       });
     }
   }, [settingReference.current]);
+
   /**
    * button function that starts Pomodoro timer.
    */
@@ -65,22 +113,25 @@ function StudyTimer(props: any) {
       settingReference.current &&
       (timer.hours > 0 || timer.minutes > 0 || timer.seconds > 0)
     ) {
-      console.log("Start button clicked!");
-      console.log(timer, pause);
+      // if the pause button is not available (e.g. the timer has not started yet) then start timer.
       if (!pause) {
         setTimer((prevTimer) => ({
           hours: prevTimer.hours - 1,
           minutes: 59,
           seconds: 59,
         }));
+
         setPause(true);
+        setBreaks([...breaksRef.current]);
       }
+
+      //setting up timer interval this runs no matter if the timer has just started or not.
       const timerIntervalID = setInterval(() => {
         setTimer((prevTimer) => ({
           ...prevTimer,
           seconds: prevTimer.seconds - 1,
         }));
-      }, 1000);
+      }, 1);
 
       setTimerActive(true);
       intervalIdRef.current = timerIntervalID;
@@ -92,10 +143,7 @@ function StudyTimer(props: any) {
    */
   const PauseClick = () => {
     if (timerActive) {
-      const intervalID = intervalIdRef.current;
-      clearInterval(intervalID);
-      setTimerActive(false);
-      console.log("End button clicked!");
+      stopTimer();
     }
   };
 
@@ -106,21 +154,15 @@ function StudyTimer(props: any) {
     if (settingReference.current) {
       setPause(false);
       PauseClick();
+      setBreaks([...breaksRef.current]);
       setTimer({
         hours: settingReference.current.pomodoro,
         minutes: 0,
         seconds: 0,
       });
-      console.log("Reset button clicked!");
-    }
-  };
 
-  /**
-   * @param currentTime value from 0 to 60
-   * @returns either a singular string value from 10-60 or a string from 0-9 with an extra 0 in the front
-   */
-  const setTime = (currentTime: number) => {
-    return currentTime > 9 ? currentTime.toString() : "0" + currentTime;
+      console.log(breaks);
+    }
   };
 
   return (

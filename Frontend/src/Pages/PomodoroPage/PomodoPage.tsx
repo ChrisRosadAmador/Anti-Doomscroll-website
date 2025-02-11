@@ -1,39 +1,34 @@
 import { useRef, useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
-import SettingsModal from "../../common/Modals/SettingsModal";
+import { SettingsModal, settingInput } from "../../common/Modals/SettingsModal";
 import CelebrationModal from "../../common/Modals/CelebrationModal";
 import StudyTimer from "./TimerComponents/StudyTimer";
 function PomodoroPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const breakArrayRef = useRef<number[]>([]);
   const settingsRef = useRef<settingInput>(null);
   const [timerComplete, setTimerComplete] = useState(false);
   const body: HTMLElement | null = document.getElementById("body");
 
-  enum alarmSound {
-    placeHolder = "",
-    alarm1 = "sound1",
-    alarm2 = "sound2",
-    alarm3 = "sound3",
-  }
-
-  enum backgroundMusic {
-    placeHolder = "",
-    bgMusic1 = "Music1",
-    bgMusic2 = "Music2",
-    bgMusic3 = "Music3",
-  }
-  interface settingInput {
-    pomodoro: number;
-    shortBreak: number;
-    longBreak: number;
-    alarm: alarmSound;
-    bgMusic: backgroundMusic;
-    notification: boolean;
-  }
-
   const visibleFrame = { opacity: 1 };
   const invisibleFrame = { opacity: 0 };
+
+  const calcBreaks = () => {
+    if (settingsRef.current) {
+      let breakInterval =
+        (settingsRef.current.pomodoro * 60) / (settingsRef.current.breaks + 1);
+      breakArrayRef.current = [];
+      breakArrayRef.current.push(breakInterval);
+
+      for (let i = 1; i < settingsRef.current.breaks; i++) {
+        breakArrayRef.current.push(
+          breakArrayRef.current[i - 1] + breakInterval
+        );
+      }
+      console.log(breakArrayRef.current);
+    }
+  };
 
   return (
     <>
@@ -55,6 +50,7 @@ function PomodoroPage() {
         className="flex justify-center items-center flex-col gap-10"
       >
         <StudyTimer
+          breaksRef={breakArrayRef}
           settingReference={settingsRef}
           timerState={(newState: boolean) => {
             setTimerComplete(newState);
@@ -82,6 +78,10 @@ function PomodoroPage() {
         isOpen={settingsOpen}
         closeModal={() => {
           if (body) body.style.overflow = "hidden auto";
+          setSettingsOpen(false);
+        }}
+        confirmInput={() => {
+          calcBreaks();
           setSettingsOpen(false);
         }}
         settingsObj={settingsRef}

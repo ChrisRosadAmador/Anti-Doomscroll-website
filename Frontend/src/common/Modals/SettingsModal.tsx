@@ -2,44 +2,45 @@ import { IoMdClose } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
 const MountOverlay: any = document.getElementById("overlay");
 
-function SettingsModal(props: any) {
-  const { isOpen, closeModal, settingsObj } = props;
+enum alarmSound {
+  placeHolder = "",
+  alarm1 = "sound1",
+  alarm2 = "sound2",
+  alarm3 = "sound3",
+}
+
+enum backgroundMusic {
+  placeHolder = "",
+  bgMusic1 = "Music1",
+  bgMusic2 = "Music2",
+  bgMusic3 = "Music3",
+}
+export interface settingInput {
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  breaks: number;
+  alarm: alarmSound;
+  bgMusic: backgroundMusic;
+  notification: boolean;
+}
+
+export function SettingsModal(props: any) {
+  const { isOpen, closeModal, settingsObj, confirmInput } = props;
   const stateModal = { opacity: 0 };
   const animateModal = { opacity: 1 };
   const transition = { duration: 1, ease: "easeInOut", delay: 0.05 };
 
-  enum alarmSound {
-    placeHolder = "",
-    alarm1 = "sound1",
-    alarm2 = "sound2",
-    alarm3 = "sound3",
-  }
-
-  enum backgroundMusic {
-    placeHolder = "",
-    bgMusic1 = "Music1",
-    bgMusic2 = "Music2",
-    bgMusic3 = "Music3",
-  }
-  interface settingInput {
-    pomodoro: number;
-    shortBreak: number;
-    longBreak: number;
-    breakCount: number;
-    alarm: alarmSound;
-    bgMusic: backgroundMusic;
-    notification: boolean;
-  }
-
   const [notification, setNotification] = useState(false);
-  const { register, handleSubmit, formState, trigger } = useForm<settingInput>({
-    mode: "all",
-  });
+  const { register, handleSubmit, formState, trigger, reset } =
+    useForm<settingInput>({
+      mode: "all",
+    });
+
   return createPortal(
     <>
       <AnimatePresence>
@@ -193,10 +194,10 @@ function SettingsModal(props: any) {
                     <label className="w-1/4 font-mono text-sm">
                       break count
                       <input
-                        className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.breakCount ? "border-red-500" : ""}`}
+                        className={`h-8 w-full font-mono text-xs border-2 bg-zinc-300 rounded-md ${formState.errors.breaks ? "border-red-500" : ""}`}
                         placeholder="# of breaks"
                         type="number"
-                        {...register("breakCount", {
+                        {...register("breaks", {
                           valueAsNumber: true,
                           min: {
                             value: 1,
@@ -215,9 +216,9 @@ function SettingsModal(props: any) {
                           },
                         })}
                       />
-                      {formState.errors.breakCount && (
+                      {formState.errors.breaks && (
                         <p className="settings-alert">
-                          {formState.errors.breakCount.message}
+                          {formState.errors.breaks.message}
                         </p>
                       )}{" "}
                     </label>
@@ -284,7 +285,7 @@ function SettingsModal(props: any) {
                     const isValid = await trigger();
                     if (isValid) {
                       setTimeout(() => {
-                        closeModal();
+                        confirmInput();
                       }, 50);
                     } else {
                       console.error("Warning errors found: ", formState.errors);
@@ -302,5 +303,3 @@ function SettingsModal(props: any) {
     MountOverlay
   );
 }
-
-export default SettingsModal;
