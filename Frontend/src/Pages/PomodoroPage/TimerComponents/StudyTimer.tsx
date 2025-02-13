@@ -8,7 +8,7 @@ function StudyTimer(props: any) {
   const [pause, setPause] = useState(false);
   const intervalIdRef = useRef(0);
   const [breaks, setBreaks] = useState<number[]>([]);
-  const { settingReference, timerState, bodyRef, breaksRef } = props;
+  const { settingReference, timerState, bodyRef, breaksRef, setBreakModal } = props;
 
   /**
    * @param hours The current hours remaining when function is called. A number that goes from 0-24.
@@ -57,15 +57,9 @@ function StudyTimer(props: any) {
     }
 
     // case 2: if converted timer value is equal to the top most break then start break sequence
-    if (
-      breaks.length != 0 &&
-      convertTime(timer.hours, timer.minutes) == breaks[breaks.length - 1] &&
-      timer.seconds == 1
-    ) {
-      setBreaks((prevBreaks) => [
-        ...prevBreaks.slice(0, prevBreaks.length - 1),
-      ]);
-
+    if (breaks.length != 0 && convertTime(timer.hours, timer.minutes) == breaks[breaks.length - 1] && timer.seconds == 1) {
+      setBreaks((prevBreaks) => [...prevBreaks.slice(0, prevBreaks.length - 1)]);
+      setBreakModal(true);
       stopTimer();
       return;
     }
@@ -108,11 +102,7 @@ function StudyTimer(props: any) {
    * button function that starts Pomodoro timer.
    */
   const StartClick = () => {
-    if (
-      !timerActive &&
-      settingReference.current &&
-      (timer.hours > 0 || timer.minutes > 0 || timer.seconds > 0)
-    ) {
+    if (!timerActive && settingReference.current && (timer.hours > 0 || timer.minutes > 0 || timer.seconds > 0)) {
       // if the pause button is not available (e.g. the timer has not started yet) then start timer.
       if (!pause) {
         setTimer((prevTimer) => ({
@@ -168,36 +158,14 @@ function StudyTimer(props: any) {
   return (
     <>
       <div id="timer-display-section" className="flex justify-center">
-        <p
-          className="text-white font-mono text-8xl font-bold border-4 p-5 rounded-md border-white"
-          id="timer-display"
-        >
-          {setTime(timer.hours % 60) +
-            ":" +
-            setTime(timer.minutes % 60) +
-            ":" +
-            setTime(timer.seconds % 60)}
+        <p className="text-white font-mono text-8xl font-bold border-4 p-5 rounded-md border-white" id="timer-display">
+          {setTime(timer.hours % 60) + ":" + setTime(timer.minutes % 60) + ":" + setTime(timer.seconds % 60)}
         </p>
       </div>
       <div id="button-section" className="flex gap-4 justify-center">
-        <Button
-          color="bg-blue-600"
-          text="Start"
-          textColor="text-white"
-          ClickFunc={StartClick}
-        />
-        <Button
-          color="bg-red-600"
-          text="Pause"
-          textColor="text-white"
-          ClickFunc={PauseClick}
-        />
-        <Button
-          color="bg-white"
-          text="Reset"
-          textColor="text-black"
-          ClickFunc={ResetClick}
-        />
+        <Button color="bg-blue-600" text="Start" textColor="text-white" ClickFunc={StartClick} />
+        <Button color="bg-red-600" text="Pause" textColor="text-white" ClickFunc={PauseClick} />
+        <Button color="bg-white" text="Reset" textColor="text-black" ClickFunc={ResetClick} />
       </div>
     </>
   );

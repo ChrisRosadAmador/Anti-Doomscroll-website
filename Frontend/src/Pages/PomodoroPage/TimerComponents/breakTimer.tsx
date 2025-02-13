@@ -20,15 +20,20 @@ function CelebrationModal(props: any) {
             animate={animateModal}
             exit={stateModal}
             transition={transition}
-            className="h-full w-full bg-black bg-opacity-50 fixed left-0 top-0 overflow-y-auto overflow-x-auto flex items-center justify-center"
-          >
+            className="h-full w-full bg-black bg-opacity-50 fixed left-0 top-0 overflow-y-auto overflow-x-auto flex items-center justify-center">
             <motion.div
-              className=""
+              className="break-modal"
               initial={{ ...stateModal, y: 100 }}
               animate={{ ...animateModal, y: 0 }}
               exit={{ ...stateModal, y: -100 }}
-              transition={transition}
-            ></motion.div>
+              transition={transition}>
+              <div className="celebration-modal-header">
+                <p className="text-2xl font-mono">Its time to take a break☺️</p>
+                <button id="close-btn" onClick={onClose} className="bg-red-600 flex flex-grow-0 rounded-lg w-10 h-6 justify-center items-center mr-2">
+                  <IoMdClose className="text-white" />
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

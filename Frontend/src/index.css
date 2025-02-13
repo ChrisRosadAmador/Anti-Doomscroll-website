@@ -185,7 +185,7 @@ END OF settings-alert
 */
 /*
 =========================
-celebration-header
+celebration modal styles
 =========================
 */
 .celebration-modal {
@@ -212,4 +212,27 @@ celebration-header
   padding-top: 5px;
   border-bottom-width: 0.5px;
   border-color: #d9d9d9;
+}
+/*
+=========================
+END OF celebration modal styles
+=========================
+*/
+/*
+=========================
+breakTimer modal styles
+=========================
+*/
+.break-modal {
+  min-width: 350px;
+  min-height: 150px;
+  width: 33%;
+  height: fit-content;
+  max-width: 650px;
+  max-height: 300px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  @apply rounded-lg;
 }
