@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { SettingsModal, settingInput } from "../../common/Modals/SettingsModal";
 import CelebrationModal from "../../common/Modals/CelebrationModal";
 import StudyTimer from "./TimerComponents/StudyTimer";
-import BreakTimer from "./TimerComponents/BreakTimer";
+import BreakTimer from "./TimerComponents/breakTimer";
 
 function PomodoroPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -93,6 +93,8 @@ function PomodoroPage() {
           if (body) body.style.overflow = "hidden auto";
           setTimerBreak(false);
         }}
+        shortTime={settingsRef.current ? settingsRef.current.shortBreak : 0}
+        longTime={settingsRef.current ? settingsRef.current.longBreak : 0}
       />
     </>
   );

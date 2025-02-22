@@ -173,11 +173,11 @@ export function SettingsModal(props: any) {
                           valueAsNumber: true,
                           min: {
                             value: 1,
-                            message: "Error: too few breaks, you must choose between 1-6 breaks.",
+                            message: "Error: too few breaks, you must choose between 1-5 breaks.",
                           },
                           max: {
-                            value: 6,
-                            message: "Error: too many breaks, you must choose between 1-6 breaks.",
+                            value: 5,
+                            message: "Error: too many breaks, you must choose between 1-5 breaks.",
                           },
                           required: {
                             value: true,
