@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Button from "../../../common/Button/Button";
 import PropTypes from "prop-types";
+import NotifyModal from "../../../common/Modals/NotifyModal";
 
 const MountOverlay: any = document.getElementById("overlay");
 
@@ -19,11 +20,10 @@ function BreakTimer(props: breakTimerProps) {
   const stateModal = { opacity: 0 };
   const animateModal = { opacity: 1 };
   const transition = { duration: 1, ease: "easeInOut", delay: 0.05 };
+
   const [timeChosen, setTimeChosen] = useState(false);
-  const [breakType, setBreakType] = useState("short");
-  const [breakTime, setBreakTime] = useState({ minutes: 0, seconds: 0 });
+  const [pBreak, setpBreak] = useState({ breakOn: false, breakType: "short", minutes: 0, seconds: 0 });
   const breakIntervalID = useRef(0);
-  const [breakOn, setBreakOn] = useState(false);
   // whenever break modal opens it will make sure that the timeChosen is set to false on load so
   // that the option for a short break and long break is always available
   useEffect(() => {
@@ -31,56 +31,47 @@ function BreakTimer(props: breakTimerProps) {
     if (breakIntervalID.current) {
       clearInterval(breakIntervalID.current);
     }
-    setBreakTime({ minutes: 0, seconds: 0 });
-    setBreakOn(false);
+    setpBreak((prevBreak) => ({ ...prevBreak, breakOn: false, minutes: 0, seconds: 0 }));
   }, [canOpen]);
 
   /*
   Timer functionality section
   */
   const startBreak = () => {
-    if (!breakOn) {
+    if (!pBreak.breakOn) {
       breakIntervalID.current = setInterval(() => {
-        setBreakTime((prevBreak) => ({ ...prevBreak, seconds: prevBreak.seconds - 1 }));
+        setpBreak((prevBreak) => ({ ...prevBreak, seconds: prevBreak.seconds - 1 }));
       }, 1);
-      setBreakOn(true);
+      setpBreak((prevBreak) => ({ ...prevBreak, breakOn: true }));
     }
   };
 
   const pauseBreak = () => {
-    if (breakOn) {
+    if (pBreak.breakOn) {
       clearInterval(breakIntervalID.current);
-      setBreakOn(false);
+      setpBreak((prevBreak) => ({ ...prevBreak, breakOn: false }));
     }
   };
 
   useEffect(() => {
-    if (breakTime.minutes == 0 && breakTime.seconds == 0) {
+    if (pBreak.minutes == 0 && pBreak.seconds == 0) {
       clearInterval(breakIntervalID.current);
       // TODO: Add some type of indicator that the timer is done (like a modal)
       // and once user closes indicator break modal closes and they can manually start the timer or maybe programmatically we can start it.
       return;
     }
-    if (breakTime.seconds == 0 && breakOn) {
-      setBreakTime((prevTime) => ({ minutes: prevTime.minutes - 1, seconds: 59 }));
+    if (pBreak.seconds == 0 && pBreak.breakOn) {
+      setpBreak((prevBreak) => ({ ...prevBreak, minutes: prevBreak.minutes - 1, seconds: 59 }));
     }
-  }, [breakTime.seconds, breakOn]);
+  }, [pBreak.seconds, pBreak.breakOn]);
   /*
   END OF Timer functionality section
   */
 
   function choseTime() {
-    const longBreak = () => {
-      console.log("long break chosen");
+    const configBreakType = (breakType: string, minutes: number) => {
       setTimeChosen((prev) => !prev);
-      setBreakType("long");
-      setBreakTime((prevBreak) => ({ ...prevBreak, minutes: longTime }));
-    };
-    const shortBreak = () => {
-      console.log("short break chosen");
-      setTimeChosen((prev) => !prev);
-      setBreakType("short");
-      setBreakTime((prevBreak) => ({ ...prevBreak, minutes: shortTime }));
+      setpBreak((prevBreak) => ({ ...prevBreak, breakType: breakType, minutes: minutes }));
     };
 
     return (
@@ -93,8 +84,22 @@ function BreakTimer(props: breakTimerProps) {
         key="choosetime">
         <h3 className="text-center text-2xl font-mono mb-10">Choose either a short or long break!</h3>
         <div className="flex items-center justify-evenly">
-          <Button color="bg-blue-600" textColor="text-white" text="short break" ClickFunc={shortBreak} />
-          <Button color="bg-red-600" textColor="text-white" text="long break" ClickFunc={longBreak} />
+          <Button
+            color="bg-blue-600"
+            textColor="text-white"
+            text="short break"
+            ClickFunc={() => {
+              configBreakType("short", shortTime);
+            }}
+          />
+          <Button
+            color="bg-red-600"
+            textColor="text-white"
+            text="long break"
+            ClickFunc={() => {
+              configBreakType("long", longTime);
+            }}
+          />
         </div>
       </motion.div>
     );
@@ -109,11 +114,11 @@ function BreakTimer(props: breakTimerProps) {
         transition={transition}
         className="flex flex-col h-5/6 w-full justify-between gap-5 items-center">
         <div>
-          <h3 className="text-center font-mono text-2xl">Congrats you chose a {breakType} break</h3>
+          <h3 className="text-center font-mono text-2xl">Congrats you chose a {pBreak.breakType} break</h3>
           <p className="text-xs text-center">Note: if you exit out of this modal you lose your break.</p>
         </div>
         <p className="text-black font-mono text-5xl font-bold border-4 rounded-md border-white" id="timer-display">
-          {setTime(breakTime.minutes) + ":" + setTime(breakTime.seconds % 60)}
+          {setTime(pBreak.minutes) + ":" + setTime(pBreak.seconds % 60)}
         </p>
         <div className="flex justify-evenly w-1/2">
           <Button color="bg-blue-600" textColor="text-white" text="start" ClickFunc={startBreak} />

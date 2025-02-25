@@ -2,9 +2,10 @@ import { useRef, useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { SettingsModal, settingInput } from "../../common/Modals/SettingsModal";
-import CelebrationModal from "../../common/Modals/CelebrationModal";
+import NotifyModal from "../../common/Modals/NotifyModal";
 import StudyTimer from "./TimerComponents/StudyTimer";
-import BreakTimer from "./TimerComponents/breakTimer";
+import BreakTimer from "./TimerComponents/BreakTimer";
+import { GiSharpSmile } from "react-icons/gi";
 
 function PomodoroPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -13,6 +14,15 @@ function PomodoroPage() {
   const breakArrayRef = useRef<number[]>([]);
   const settingsRef = useRef<settingInput>(null);
   const body: HTMLElement | null = document.getElementById("body");
+  const celebrationMsg = (
+    <>
+      <p className="font-mono text-center">
+        Great job on completing your studying habits today! Enjoy the rest of your day full of brainrot or otherwise. My job is done so I don't
+        care...
+      </p>
+      <GiSharpSmile className="text-2xl self-center" />
+    </>
+  );
 
   const visibleFrame = { opacity: 1 };
   const invisibleFrame = { opacity: 0 };
@@ -68,11 +78,13 @@ function PomodoroPage() {
         </button>
       </motion.div>
 
-      <CelebrationModal
+      <NotifyModal
         canOpen={timerComplete}
         onClose={() => {
           setTimerComplete(false);
         }}
+        modalMsg={celebrationMsg}
+        modalTitle="Congrats timer is complete!!🥳"
       />
       <SettingsModal
         isOpen={settingsOpen}
