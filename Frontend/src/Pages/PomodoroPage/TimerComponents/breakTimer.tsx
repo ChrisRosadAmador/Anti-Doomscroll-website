@@ -23,6 +23,7 @@ function BreakTimer(props: breakTimerProps) {
 
   const [timeChosen, setTimeChosen] = useState(false);
   const [pBreak, setpBreak] = useState({ breakOn: false, breakType: "short", minutes: 0, seconds: 0 });
+  const [breakComplete, setBreakComplete] = useState(false);
   const breakIntervalID = useRef(0);
   // whenever break modal opens it will make sure that the timeChosen is set to false on load so
   // that the option for a short break and long break is always available
@@ -32,6 +33,7 @@ function BreakTimer(props: breakTimerProps) {
       clearInterval(breakIntervalID.current);
     }
     setpBreak((prevBreak) => ({ ...prevBreak, breakOn: false, minutes: 0, seconds: 0 }));
+    setBreakComplete(false);
   }, [canOpen]);
 
   /*
@@ -54,10 +56,11 @@ function BreakTimer(props: breakTimerProps) {
   };
 
   useEffect(() => {
-    if (pBreak.minutes == 0 && pBreak.seconds == 0) {
+    if (pBreak.minutes == 0 && pBreak.seconds == 0 && pBreak.breakOn) {
       clearInterval(breakIntervalID.current);
       // TODO: Add some type of indicator that the timer is done (like a modal)
       // and once user closes indicator break modal closes and they can manually start the timer or maybe programmatically we can start it.
+      setBreakComplete(true);
       return;
     }
     if (pBreak.seconds == 0 && pBreak.breakOn) {
@@ -141,6 +144,7 @@ function BreakTimer(props: breakTimerProps) {
       <AnimatePresence>
         {canOpen && (
           <motion.div
+            key="1"
             initial={stateModal}
             animate={animateModal}
             exit={stateModal}
@@ -164,6 +168,16 @@ function BreakTimer(props: breakTimerProps) {
             </motion.div>
           </motion.div>
         )}
+        <NotifyModal
+          key="2"
+          canOpen={breakComplete}
+          onClose={() => {
+            setBreakComplete(false);
+            onClose();
+          }}
+          modalMsg="Your break is complete, time to start studying!"
+          modalTitle="Relaxation time done!"
+        />
       </AnimatePresence>
     </>,
     MountOverlay
